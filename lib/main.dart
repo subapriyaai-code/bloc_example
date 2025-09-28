@@ -1,11 +1,19 @@
+import 'package:bloc_example/data/repositories/user_repo_impl.dart';
+import 'package:bloc_example/domain/repositories/user_repo.dart';
+import 'package:bloc_example/domain/use_cases/get_user_use_case.dart';
+import 'package:bloc_example/presentation/dasbhoard/dashboard_bloc.dart';
+import 'package:bloc_example/presentation/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp( MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  
+  final GetUserUseCase _getUserUseCase = GetUserUseCase(UserRepoImpl());
 
   // This widget is the root of your application.
   @override
@@ -13,51 +21,12 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(),
+      home: BlocProvider(
+        create: (context) => DashboardBloc(_getUserUseCase),
+        child: const HomePage(),
+      ),
     );
-  }
-}
-
-
-
-const txt="""
-class UserEntity {
-  const UserEntity({
-    required this.userId,
-    required this.name,
-    required this.category
-  });
-  final String userId;
-  final String name;
-  final String category;
-}
-""";
-
-
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-  
-
-  @override
-  Widget build(BuildContext context) {
-    return  Center(child: Text(txt),);
   }
 }
